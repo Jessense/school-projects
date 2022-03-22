@@ -1,0 +1,54 @@
+statement:
+    variable
+    {
+        left_type = variable_type;
+    }
+    assignop
+    expression
+    {
+        right_type = exp_type;
+    }
+    |
+    expression
+    {
+        right_type = exp_type;
+        check(left_type, right_type);
+    }
+
+expression:
+    simple_expression
+    relop
+    {
+        exp_left_type = simexp_type;
+    }
+    simple_expression
+    {
+        exp_right_type = simexp_type;
+        check(left_type, right_type);
+    }
+    |
+    simple_expression
+    {
+        exp_type = simexp_type;
+    }
+
+simple_expression:
+    {
+        simexp_left_type = simexp_type;
+    }
+    addop term
+    {
+        simexp_right 
+    }
+
+variable:
+    id
+    {
+        variable_type = get_type($1);
+    }
+    |
+    id
+    {
+        variable_type = get_return_type($1); //数组
+    }
+    id_varpart;
